@@ -34,7 +34,7 @@ export const todoSlice=createSlice({
             state.todos.push(todo)
         },
         removeTodo:(state,action)=>{
-            id=action.payload
+            const id=action.payload
             state.todos=state.todos.filter((item)=>item.id!=id)
         },
         updateTodo:(state,action)=>{
@@ -48,7 +48,7 @@ export const todoSlice=createSlice({
 })
 
 // exporting the individual function which are allowed to update the state
-export const {addTodo,removeTodo, updateTodo}=todoSlice.actions 
+export const {addTodo,removeTodo,updateTodo}=todoSlice.actions 
 
 // exporting all the reducers
 export default todoSlice.reducer

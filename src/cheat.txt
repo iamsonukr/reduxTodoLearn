@@ -1,0 +1,239 @@
+Redux is a pattern and library for managing and updating global application state, 
+where the UI triggers events called "actions" to describe what happened, 
+and separate update logic called "reducers" updates the state in response.
+
+The center of every Redux application is the store. A "store" is a container that holds your application's global state.
+
+
+SRC = https://redux.js.org/tutorials/fundamentals/part-1-overview
+
+------------------------------------HOF----------------------------------
+A higher order function is a function which takes function as an argument or returns a function or both.
+
+function sayHello(){
+    return "Hello"
+}
+
+// It Took sayHello as an argument and print the value returned
+function greeting(sayHello){
+    console.log(sayHello())
+}
+
+example setTimeout(()=>sayHello,2000)
+
+----------------------------Functional Composition-------------------------
+let input="     javascript     "
+let output="<div>" + input+trim() + "</div>"
+
+
+const trim = str =>str.trim();
+const wrapInDiv=str=>`<div>${str}</div>`
+const toLowerCase =str=>str.toLowerCase()
+
+const result= wrapInDiv(toLowerCase(trim(str)))
+
+REMOVING PARANTHESIS TO REDUCE COMPLEXITY
+
+import {compose, pipe} from 'lodash/fp'
+ //left to right 
+const transform=componse(wrapInDiv, toLowerCase, trim)
+//right to left 
+const transform=pipe( trim,toLowerCase,wrap ) 
+
+-------------------------------CURRYING--------------------------------------
+const trim = str =>str.trim();
+
+//the div word is repeating in the both the function so we pass it as a parameter
+const wrapInDiv=str=>`<div>${str}</div>`
+const wrapInSpan=str=>`<div>${str}</div>`
+
+const wrap=(type,str)=>`<${type}>${str}</${type}>`
+wrap=>type=>str=>`<${type}>${str}</${type}>`
+const toLowerCase =str=>str.toLowerCase()
+
+Normal function add(a,b)
+Currying Function add (a)(b)  or const res= a=>b=>a+b 
+
+
+Currying is a functional programming technique where a function with multiple arguments is transformed 
+into a series of functions, each taking a single argument.
+// Regular function
+function simpleFunction(param1, param2, param3) {
+    return param1 + param2 + param3;
+}
+
+// Curried function
+function curriedFunction(param1) {
+    return function(param2) {
+        return function(param3) {
+            return param1 + param2 + param3;
+        };
+    };
+}
+
+------------------------------------------------PURE FUNCTION---------------------------
+A function is pure if everytime we call it with same argument and it return the same result
+for example 
+
+Pure Function should have
+-> No random values
+-> No current date or time 
+-> No global State (DOM, Files, DB, Etc)
+-> No mutation of parameter
+
+Benifits of pure function
+-> Self-documentng
+-> Easily testable
+-> Concurrency
+-> Cacheable
+
+while making redcers we need to make sure the functions are pure .
+
+
+// Pure Function
+function myFunOne(number){
+    return number*2;
+}
+
+// Not pure
+function myFun(number)=>{
+    return number * Math.random()
+}
+
+----------------------------------Immuteabel (once created cannot be changed)----------------------
+In JS objects and arrays are mutable they can be changed 
+Const keyword used with them prevent reassignment .
+
+Benifits of immutabiligy
+->Predictibility
+->Faster change detection
+->Concurrency
+
+Cons 
+-> Performance overhead
+-> Memory overhead 
+
+// When you are building application with redux , you should not mutate the date because that is the fundamental principle in redux
+
+
+----------------------------------------Updating Objects-------------------------------------------
+const person = {name:"john"}
+we are not suppose to change the values directly 
+person.name ="SONU" ❌ 
+take a copy first and then change the value 
+const updatedVlaue={...person,{name:"Sonu"}} ✔️
+
+Object.assign({},person,{name:"Sonu"}) // this first curly Brac is going to store the all values of Person objects ✔️ another way
+Both these method do shallow copy so we need to be careful while working with nested objects
+
+const shallowCopy={...person}
+const deepCopy={...person,address:{...person.address}}
+
+
+--------------------------- Updating arrays -----------------------
+
+const numbers=[1,2,3];
+const added=[...numbers,4]
+
+// adding at specific position ------
+const index=numbers.indexOf(2)
+const added=[...numbers.slice(0,index),4,...numbers]
+
+Inserting new array------
+const arr=[1,2,3]
+const index=indexOf(2);
+
+const newArr=[...arr.slice(0,index),4,...arr.slice(index)]
+console.log(newArr)
+
+removeing 2 ------
+const newArr=arr.filter(n=>n!=2)
+
+const updatedArr=numbers.map(n=>(n==2?20:n))
+console.log(updated)
+
+--------------------------------REDUX ----------------------------------
+Store -> It is the single source of truth where all the data are stored. We should'nt directly modify the values  in the store.
+Reducers -> These are the function which takes the current instance of the store and return the updated store. Each reducer is responsible to update the changes in the specific handler
+action -> reducers take action as the second parameter. action could be anything like user logged in, user logged out, based on the type of action 
+
+redux can have multiple slices and sepearte reducers for each slice
+
+Slices => Each slice are like the manager which are responsible to handle their own department . They dont have to do anything with the  other department.
+
+There are three building blocks in Redux
+Action | Store | Reducers
+
+Store => Single js object that includes our application state. Actions that are plane js object which represent what just happened.
+Reducer => We have reducers which are responsible to update the slice of the store. Reducers are pure function .They take the current store state as parameter and return the updated on.
+
+------- Working of Redux -------
+1> When user perform an action like add to cart.
+2> We create an action and dispatch it . 
+3> Store have Dispatch method which takes action as a parameter and call the reducer. 
+4> The reducer computes the new state and returns it.
+5> Store update the new state internally and modify the UI components.
+
+
+Why do we need this building blocks? Why we need to dispatch actions 
+-> Dispath works as an entry point to our store. We are sending all the action through a particular entry point , So we have central control what should happen everytime the user performs an action.
+-> This allow us to do some really cool things like store the log of every action , It shows every action that has been dispatched and how values have changed we can also easily do undo and redo mechenism.
+
+Steps to create a Redux Store :-
+1> Design a store.
+2> Define the actions.
+3> Create Reducers.
+4> Set up the store
+
+1> Designing the store ( defining data structure of data )
+-> For a simple bug tracking application what data we need to store and what will be the data structure of the data.
+-> We can have array of bug objects , Each bug object has properties like ID , description, and status .
+-> Store simply means the data structure you are going to use for storing the data ,
+-> if we want to store array of object we can initialize it as empty array. And then push the objects in it through reduvers.
+
+EXAMPLE
+[
+    {ID:, desc:"", status:""},
+    {ID:, desc:"", status:""},
+    {ID:, desc:"", status:""},
+    {ID:, desc:"", status:""}
+]
+
+2> Defining the actions ( writing function to sending data)
+-> What are the actions that the user can do on a bug tracker application?
+-> He can add a bug, Remove the bug, change status of the bug.
+-> Actions are just jS objects which describe what just happened.
+
+EXAMPLE 
+{
+    type:"ADD_BUG",
+    payload:{
+        description:" Bug added "
+    }
+}
+
+3> Creating the reducer  ( writing function to store and manage data)
+
+// reduxMosh/reduer.jsx
+
+4> Creating the store 
+
+// reduxMosh/store.jsx
+
+5> Dispatching actions
+
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+

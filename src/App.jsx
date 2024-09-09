@@ -1,17 +1,11 @@
-import { useState } from 'react'
-import './App.css'
-import AddTodo from './components/AddTodo'
-import Todos from './components/Todos'
+import React from 'react'
+import Todo from './pages/todo/Todo'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-     <h1>Learn About Readux Toolkit </h1>
-     <AddTodo/>
-     <Todos/>
-    </>
+    <div>
+      <Todo/>
+    </div>
   )
 }
 
